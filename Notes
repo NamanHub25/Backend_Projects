@@ -1,0 +1,45 @@
+`req — Request:`  contains the URL, HTTP method, headers, route parameters, query parameters and parsed body.
+
+`res — Response:` lets you set the status code, headers and body returned to the client.
+
+`next — Control flow:` passes control to the next applicable middleware or route handler, or forwards an error when called with an error.
+
+`Middleware:` the most important concept in this milestone
+
+A middleware function is code that runs during request processing. It can inspect or modify the request, send a response, pass control onward, or forward an error.
+
+Think of middleware as checkpoints at the entrance to a building. One checkpoint logs your arrival, another checks your identity, and another checks your permissions before you can enter a restricted room.
+
+`Let's make the Middleware pipeline interactive`
+- `A calls next(), B calls next()` 
+- Middleware A runs.
+- Middleware B runs.
+- The route handler runs and sends the response.
+--------------------------------------------------------------------------------------------------
+
+- `A sends a response without calling next()`
+- Middleware A runs.
+- A sends the response.
+- Middleware B and the route handler do not run for this request.
+-------------------------------------------------------------------------------------------------
+- `A calls next('route')`
+- Middleware A runs inside a route that supports route skipping.
+- next('route') skips the remaining callbacks for that route.
+- Express looks for another matching route.
+-------------------------------------------------------------------------------------------------
+- `A calls next(error)`
+- Middleware A runs.
+- next(error) transfers control to error-handling middleware.
+- Normal middleware and route handlers are skipped until error handling takes over.
+-------------------------------------------------------------------------------------------------
+`Routing: how Express decides which handler runs`
+A route matches an HTTP method and a URL pattern.
+
+| Request | Route | Purpose |
+| --- | --- | --- |
+| `GET /health` | `/health` | Health check |
+| `GET /api/users/42` | `/api/users/:id` | Fetch user 42 |
+| `GET /api/users?page=2` | `/api/users` | Fetch a page of users |
+| `POST /api/users` | `/api/users` | Create a user |
+
+
